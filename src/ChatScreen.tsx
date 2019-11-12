@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Row,
@@ -19,21 +19,24 @@ const ChatScreen: React.FC<{
 }> = ({ receivedMessages, users, sendMessage, nickname }) => {
   const [message, setMessage] = useState('');
   const [recipients, setRecipients] = useState<Array<string>>([]);
-
+  let bottomElement: any;
+  useEffect(() => {
+    if (bottomElement) bottomElement.scrollIntoView({ behavior: 'smooth' });
+  });
   return (
     <Form
-      className="h-100"
+      className="h-100 mh-100"
       onSubmit={(e: any) => {
         sendMessage(recipients, message);
         setMessage('');
         e.preventDefault();
       }}
     >
-      <Container fluid className="py-3 h-100 d-flex flex-column">
-        <Row className="flex-grow-1 mb-2">
-          <Col>
+      <Container fluid className="py-3 h-100 mh-100 d-flex flex-column">
+        <Row className="flex-grow-1 mb-2" style={{ maxHeight: '90vh' }}>
+          <Col className="mh-100">
             <div
-              className="p-2 border rounded w-100 h-100"
+              className="p-2 border rounded w-100 h-100 mh-100"
               style={{ overflowY: 'scroll' }}
             >
               {receivedMessages.map((message, index) => {
@@ -46,6 +49,12 @@ const ChatScreen: React.FC<{
                   </p>
                 );
               })}
+              <div
+                id="bottom"
+                ref={el => {
+                  bottomElement = el;
+                }}
+              />
             </div>
           </Col>
           <Col md={2}>
@@ -68,7 +77,7 @@ const ChatScreen: React.FC<{
             </Form.Control>
           </Col>
         </Row>
-        <Row className="chat-form">
+        <Row className="chat-form" style={{ height: '5vh' }}>
           <Col>
             <InputGroup>
               <InputGroup.Prepend>
